@@ -11,9 +11,19 @@ console.log(ap.cursos);
 var aprendizTable = document.getElementById("aprendiz");
 var estadisticasTable = document.getElementById("estadisticas");
 var cursosTable = document.getElementById("cursos");
+var cursosTbody = cursosTable.tBodies[0];
+var btnFiltro = document.getElementById("boton-filtro");
+var textoBusqueda = document.getElementById("texto-busqueda");
+btnFiltro.onclick = function () {
+    var text = textoBusqueda.value.trim().toLowerCase();
+    var cursosFiltrados = ap.cursos.filter(function (c) {
+        return c.nombre.toLowerCase().indexOf(text) !== -1;
+    });
+    mostrarCursosAprendiz(cursosFiltrados);
+};
 mostrarDatosAprendiz(ap);
 mostrarEstadistica(ap);
-mostrarCursosAprendiz(ap);
+mostrarCursosAprendiz(ap.cursos);
 function mostrarDatosAprendiz(aprendiz) {
     var tbodyAprendiz = document.createElement("tbody");
     tbodyAprendiz.innerHTML = "<tr><td colspan= 2><img src=\"./".concat(aprendiz.avatar, "\" height= \"100\">\n       <tr><td>Nombre:</td><td>").concat(aprendiz.nombres, "</td></tr>\n       <tr><td>Apellidos:</td><td>").concat(aprendiz.apellidos, "</td></tr>\n       <tr><td> Nivel Educativo:</td><td>").concat(aprendiz.nivelEducativo, "</td></tr>\n       <tr><td> Edad:</td><td>").concat(aprendiz.edad, "</td></tr>");
@@ -25,13 +35,16 @@ function mostrarEstadistica(aprendiz) {
     trElement.innerHTML = "<td><b>Cursos certificados</b></td><td>".concat(numeroCertificados, "</td>");
     estadisticasTable.appendChild(trElement);
 }
-function mostrarCursosAprendiz(aprendiz) {
-    var cursosTbody = document.createElement("tbody");
-    for (var _i = 0, _a = aprendiz.cursos; _i < _a.length; _i++) {
-        var curso = _a[_i];
+function mostrarCursosAprendiz(cursos) {
+    cursosTbody.replaceChildren();
+    for (var _i = 0, cursos_1 = cursos; _i < cursos_1.length; _i++) {
+        var curso = cursos_1[_i];
         var trElement = document.createElement("tr");
-        trElement.innerHTML = "\n        <td>".concat(curso.nombre, "</td>\n        <td>").concat(curso.calificacion, "</td>\n        <td>").concat(curso.certificado, "</td>\n        <td>").concat(curso.anio, "</td>\n        ");
+        trElement.insertCell().textContent = curso.nombre;
+        trElement.insertCell().textContent = String(curso.horas);
+        trElement.insertCell().textContent = String(curso.calificacion);
+        trElement.insertCell().textContent = String(curso.certificado);
+        trElement.insertCell().textContent = String(curso.anio);
         cursosTbody.appendChild(trElement);
     }
-    cursosTable.appendChild(cursosTbody);
 }

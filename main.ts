@@ -14,11 +14,23 @@ console.log(ap.cursos);
 
 let aprendizTable:HTMLElement = document.getElementById("aprendiz")!;
 let estadisticasTable:HTMLElement = document.getElementById("estadisticas")!;
-let cursosTable: HTMLElement = document.getElementById("cursos")!;
+let cursosTable: HTMLTableElement = document.getElementById("cursos") as HTMLTableElement;
+let cursosTbody: HTMLTableSectionElement = cursosTable.tBodies[0];
+let btnFiltro: HTMLElement = document.getElementById("boton-filtro")!;
+let textoBusqueda: HTMLInputElement = <HTMLInputElement>document.getElementById("texto-busqueda")!;
+
+btnFiltro.onclick = () => {
+    const text: string = textoBusqueda.value.trim().toLowerCase();
+    const cursosFiltrados: Curso[] = ap.cursos.filter(function(c){
+        return c.nombre.toLowerCase().indexOf(text) !== -1;
+    });
+    mostrarCursosAprendiz(cursosFiltrados);
+};
 
 mostrarDatosAprendiz(ap);
 mostrarEstadistica(ap);
-mostrarCursosAprendiz(ap);
+mostrarCursosAprendiz(ap.cursos);
+
 
 function mostrarDatosAprendiz(aprendiz: Aprendiz): void{
     let tbodyAprendiz = document.createElement("tbody");
@@ -37,18 +49,16 @@ function mostrarEstadistica(aprendiz: Aprendiz): void{
     estadisticasTable.appendChild(trElement);
 }
 
-function mostrarCursosAprendiz(aprendiz: Aprendiz): void{
-    let cursosTbody:HTMLElement = document.createElement("tbody");
-    for ( let curso of aprendiz.cursos)
+function mostrarCursosAprendiz(cursos: Curso[]): void{
+    cursosTbody.replaceChildren();
+    for ( let curso of cursos)
     {
-        let trElement:HTMLElement = document.createElement("tr")
-        trElement.innerHTML=`
-        <td>${curso.nombre}</td>
-        <td>${curso.calificacion}</td>
-        <td>${curso.certificado}</td>
-        <td>${curso.anio}</td>
-        `;
+        let trElement = document.createElement("tr")
+        trElement.insertCell().textContent = curso.nombre;
+        trElement.insertCell().textContent = String(curso.horas);
+        trElement.insertCell().textContent = String(curso.calificacion);
+        trElement.insertCell().textContent = String(curso.certificado);
+        trElement.insertCell().textContent = String(curso.anio);
         cursosTbody.appendChild(trElement)
     }
-    cursosTable.appendChild(cursosTbody);
 }
