@@ -4,7 +4,7 @@ import {Curso} from "./curso.js";
 let cursos = [
     new Curso("Practicas esenciales para el agilismo", 20, 90, true, 2019),
     new Curso("Ingenieria de software para la ewb", 15, 90, false, 2013),
-    new Curso("Pruebas Automatizadas", 20, 80, true, 2017),
+    new Curso("Pruebas Automatizadas", 20, 15, true, 2017),
     new Curso("Principios Arquitectura", 30, 75, false, 2020)
 ]; 
 
@@ -26,6 +26,8 @@ btnFiltro.onclick = () => {
     });
     mostrarCursosAprendiz(cursosFiltrados);
 };
+
+
 
 mostrarDatosAprendiz(ap);
 mostrarEstadistica(ap);
@@ -50,15 +52,16 @@ function mostrarEstadistica(aprendiz: Aprendiz): void{
 }
 
 function mostrarCursosAprendiz(cursos: Curso[]): void{
-    cursosTbody.replaceChildren();
-    for ( let curso of cursos)
-    {
+    const filas = cursos.map(curso => {
         let trElement = document.createElement("tr")
         trElement.insertCell().textContent = curso.nombre;
         trElement.insertCell().textContent = String(curso.horas);
-        trElement.insertCell().textContent = String(curso.calificacion);
+        const calificacionCell = trElement.insertCell();
+        calificacionCell.textContent = String(curso.calificacion);
+        calificacionCell.style.color = curso.calificacion > 60 ? "green" : "red";
         trElement.insertCell().textContent = String(curso.certificado);
         trElement.insertCell().textContent = String(curso.anio);
-        cursosTbody.appendChild(trElement)
-    }
+        return trElement;
+    });
+    cursosTbody.replaceChildren(...filas);
 }

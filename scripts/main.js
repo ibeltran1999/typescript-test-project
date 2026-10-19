@@ -3,7 +3,7 @@ import { Curso } from "./curso.js";
 var cursos = [
     new Curso("Practicas esenciales para el agilismo", 20, 90, true, 2019),
     new Curso("Ingenieria de software para la ewb", 15, 90, false, 2013),
-    new Curso("Pruebas Automatizadas", 20, 80, true, 2017),
+    new Curso("Pruebas Automatizadas", 20, 15, true, 2017),
     new Curso("Principios Arquitectura", 30, 75, false, 2020)
 ];
 export var ap = new Aprendiz("Juan Pablo", "Reyes", "avantar.png", 30, NivelEducativo.POSGRADO, cursos);
@@ -36,15 +36,16 @@ function mostrarEstadistica(aprendiz) {
     estadisticasTable.appendChild(trElement);
 }
 function mostrarCursosAprendiz(cursos) {
-    cursosTbody.replaceChildren();
-    for (var _i = 0, cursos_1 = cursos; _i < cursos_1.length; _i++) {
-        var curso = cursos_1[_i];
+    var filas = cursos.map(function (curso) {
         var trElement = document.createElement("tr");
         trElement.insertCell().textContent = curso.nombre;
         trElement.insertCell().textContent = String(curso.horas);
-        trElement.insertCell().textContent = String(curso.calificacion);
+        var calificacionCell = trElement.insertCell();
+        calificacionCell.textContent = String(curso.calificacion);
+        calificacionCell.style.color = curso.calificacion > 60 ? "green" : "red";
         trElement.insertCell().textContent = String(curso.certificado);
         trElement.insertCell().textContent = String(curso.anio);
-        cursosTbody.appendChild(trElement);
-    }
+        return trElement;
+    });
+    cursosTbody.replaceChildren.apply(cursosTbody, filas);
 }
